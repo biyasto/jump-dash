@@ -1,6 +1,11 @@
+import {
+    _decorator,
+    Component,
+    Vec3
+} from 'cc';
+import {ObstaclePool} from "db://assets/ObstaclePool";
 
-import { _decorator, Component, Node, Vec3 } from 'cc';
-const { ccclass, property } = _decorator;
+const { ccclass } = _decorator;
 
 /**
  * Predefined variables
@@ -13,7 +18,7 @@ const { ccclass, property } = _decorator;
  * ManualUrl = https://docs.cocos.com/creator/3.3/manual/en/
  *
  */
- 
+
 @ccclass('Block')
 export class Block extends Component {
     // [1]
@@ -22,16 +27,19 @@ export class Block extends Component {
     // [2]
     // @property
     // serializableDummy = 0;
+    owner: ObstaclePool;
 
-    start () {
-        // [3]
+
+    public init () {
+        this.node.position= new Vec3(100,0,0);
     }
 
     update (deltaTime: number) {
-    //     // [4]
-        let viTriMoi = new Vec3(this.node.position.x, this.node.position.y - 150 * deltaTime,this.node.position.z);
-        this.node.position = viTriMoi;
+        // [4]
+        let newPos = new Vec3(this.node.position.x, this.node.position.y - 150 * deltaTime,this.node.position.z);
+        this.node.position = newPos;
     }
+
 }
 
 /**
