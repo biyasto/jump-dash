@@ -11,38 +11,21 @@ import {
 const { ccclass, property } = _decorator;
 import { NodePool, Prefab } from "cc";
 import { Block } from "db://assets/Block";
-/**
- * Predefined variables
- * Name = Player
- * DateTime = Wed Nov 17 2021 19:27:05 GMT+0700 (Indochina Time)
- * Author = khaccanh
- * FileBasename = Player.ts
- * FileBasenameNoExtension = Player
- * URL = db://assets/Player.ts
- * ManualUrl = https://docs.cocos.com/creator/3.3/manual/en/
- *
- */
+import { GameManager } from "db://assets/GameManager";
 
-@ccclass("ObstaclePool")
-export class ObstaclePool extends Component {
-    private static instance: ObstaclePool;
+@ccclass("BlockPool")
+export class BlockPool extends Component {
+    private static instance: BlockPool;
     timer: number;
     blockPool: NodePool;
     blockQueue: Queue<Node> = new Queue<Node>();
 
-    // [1]
-    // dummy = '';
-
-    // [2]
     @property
-    spawnTime;
+    spawnTime = 3;
     @property
-    poolSize;
+    poolSize = 5;
     @property({ type: Prefab })
     blockPrefab: Prefab = null;
-
-    // @property
-    // serializableDummy = 0;
 
     start() {
         systemEvent.on(SystemEventType.KEY_DOWN, this.onKeyDown, this);
@@ -57,7 +40,7 @@ export class ObstaclePool extends Component {
 
     update(deltaTime: number) {
         // [4]
-        this.timer -= deltaTime;
+        this.timer -= GameManager.gameSpeed * deltaTime;
         if (this.timer < 0) {
             this.timer = this.spawnTime;
             this.spawnBlock();
@@ -74,14 +57,13 @@ export class ObstaclePool extends Component {
         this.node.addChild(block);
         this.blockQueue.enqueue(block);
         block.getComponent("Block").init();
-        console.log("spawned block");
+        //console.log("spawned block");
     }
     despawnBlock() {
         if (this.blockQueue.size() > 0) {
             this.blockPool.put(this.blockQueue.dequeue()); // using the same put method as initializing node pool, this will also call removeFromParent for the node
-            console.log("despawned block");
-        }
-        else{
+            //console.log("despawned block");
+        } else {
             console.log("unable to despawne block");
         }
     }
@@ -115,14 +97,3 @@ class Queue<T> implements IQueue<T> {
         return this.storage.length;
     }
 }
-
-/**
- * [1] Class member could be defined like this.
- * [2] Use `property` decorator if your want the member to be serializable.
- * [3] Your initialization goes here.
- * [4] Your update function goes here.
- *
- * Learn more about scripting: https://docs.cocos.com/creator/3.3/manual/en/scripting/
- * Learn more about CCClass: https://docs.cocos.com/creator/3.3/manual/en/scripting/ccclass.html
- * Learn more about life-cycle callbacks: https://docs.cocos.com/creator/3.3/manual/en/scripting/life-cycle-callbacks.html
- */

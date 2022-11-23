@@ -54,8 +54,8 @@
     },
     "_lscale": {
       "__type__": "cc.Vec3",
-      "x": 0.5,
-      "y": 0.5,
+      "x": 10,
+      "y": 10,
       "z": 1
     },
     "_layer": 33554432,
@@ -80,8 +80,8 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 500,
-      "height": 100
+      "width": 5,
+      "height": 5
     },
     "_anchorPoint": {
       "__type__": "cc.Vec2",
@@ -149,6 +149,7 @@
     "__prefab": {
       "__id__": 7
     },
+    "speed": 200,
     "_id": ""
   },
   {
@@ -179,8 +180,8 @@
     },
     "_size": {
       "__type__": "cc.Size",
-      "width": 500,
-      "height": 100
+      "width": 5,
+      "height": 5
     },
     "_id": ""
   },

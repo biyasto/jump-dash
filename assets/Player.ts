@@ -1,5 +1,6 @@
 
 import { _decorator, Component, Collider2D, Contact2DType,director, IPhysics2DContact, systemEvent, SystemEventType, EventKeyboard, macro, Vec3 } from 'cc';
+import {GameManager} from "db://assets/GameManager";
 const { ccclass, property } = _decorator;
 
 /**
@@ -51,6 +52,7 @@ export class Player extends Component {
             if(this.direction >= 0 ? newPos.x >= this.maxDistant : newPos.x <= -this.maxDistant) {
                 this.isMoving = false;
                 newPos = new Vec3(this.maxDistant * this.direction, this.node.position.y, this.node.position.z);
+                GameManager.increaseScore(1);
             }
             this.node.position = newPos;
         }
