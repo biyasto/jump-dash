@@ -19,9 +19,12 @@ export class BlockPool extends Component {
     timer: number;
     blockPool: NodePool;
     blockQueue: Queue<Node> = new Queue<Node>();
+    barTimer: number;
 
     @property
     spawnTime = 3;
+    @property
+    barMinTime = 1;
     @property
     poolSize = 5;
     @property({ type: Prefab })
@@ -30,7 +33,8 @@ export class BlockPool extends Component {
     start() {
         systemEvent.on(SystemEventType.KEY_DOWN, this.onKeyDown, this);
 
-        this.timer = this.spawnTime;
+        this.timer = 0;
+        this.barTimer = 0;
         this.blockPool = new NodePool();
         for (let i = 0; i < this.poolSize; ++i) {
             let block = instantiate(this.blockPrefab); // create node instance
@@ -39,8 +43,9 @@ export class BlockPool extends Component {
     }
 
     update(deltaTime: number) {
-        // [4]
+        if(GameManager.isOver) return;
         this.timer -= GameManager.gameSpeed * deltaTime;
+        this.barTimer -= GameManager.gameSpeed * deltaTime;
         if (this.timer < 0) {
             this.timer = this.spawnTime;
             this.spawnBlock();
@@ -56,7 +61,16 @@ export class BlockPool extends Component {
         block = this.blockPool.get();
         this.node.addChild(block);
         this.blockQueue.enqueue(block);
-        block.getComponent("Block").init();
+
+        //chose between Square or Bar
+        let isSquare = true;
+        if(this.barTimer<0)
+        {
+            isSquare = false;
+            this.barTimer=this.barMinTime;
+        }
+
+        block.getComponent("Block").init(isSquare);
         //console.log("spawned block");
     }
     despawnBlock() {

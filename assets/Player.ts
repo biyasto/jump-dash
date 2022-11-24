@@ -3,36 +3,13 @@ import { _decorator, Component, Collider2D, Contact2DType,director, IPhysics2DCo
 import {GameManager} from "db://assets/GameManager";
 const { ccclass, property } = _decorator;
 
-/**
- * Predefined variables
- * Name = Player
- * DateTime = Wed Nov 17 2021 19:27:05 GMT+0700 (Indochina Time)
- * Author = khaccanh
- * FileBasename = Player.ts
- * FileBasenameNoExtension = Player
- * URL = db://assets/Player.ts
- * ManualUrl = https://docs.cocos.com/creator/3.3/manual/en/
- *
- */
-
 @ccclass('Player')
 export class Player extends Component {
     isMoving: boolean;
     direction: number;
-    // [1]
-    // dummy = '';
-
-    // [2]
-    @property
-    moveSpeed= 3000;
-    @property
-    maxDistant= 300;
-    // @property
-    // serializableDummy = 0;
 
     start () {
 
-        // [3]
         let collider = this.getComponent(Collider2D);
         this.direction= -1;
         this.isMoving = false;
@@ -42,16 +19,17 @@ export class Player extends Component {
         }
 
         systemEvent.on(SystemEventType.KEY_DOWN, this.onKeyDown, this);
+        systemEvent.on(SystemEventType.TOUCH_START, this.onTouchStart, this);
 
     }
 
     update (deltaTime: number) {
-        // [4]
+        if(GameManager.isOver) return;
         if (this.isMoving == true) {
-            let newPos = new Vec3(this.node.position.x + this.direction * this.moveSpeed * deltaTime, this.node.position.y, this.node.position.z);
-            if(this.direction >= 0 ? newPos.x >= this.maxDistant : newPos.x <= -this.maxDistant) {
+            let newPos = new Vec3(this.node.position.x + this.direction * GameManager.playerSpeed * deltaTime, this.node.position.y, this.node.position.z);
+            if(this.direction >= 0 ? newPos.x >= GameManager.maxDistant : newPos.x <= -GameManager.maxDistant) {
                 this.isMoving = false;
-                newPos = new Vec3(this.maxDistant * this.direction, this.node.position.y, this.node.position.z);
+                newPos = new Vec3(GameManager.maxDistant * this.direction, this.node.position.y, this.node.position.z);
                 GameManager.increaseScore(1);
             }
             this.node.position = newPos;
@@ -61,19 +39,22 @@ export class Player extends Component {
     onBeginContact (selfCollider: Collider2D, otherCollider: Collider2D, contact: IPhysics2DContact | null) {
         // will be called once when two colliders begin to contact
         console.log('Collider Contact');
-        director.loadScene("main");
+        GameManager.isOver=true;
     }
 
     onKeyDown (event: EventKeyboard) {
         switch(event.keyCode) {
             case macro.KEY.a:
                 console.log('Press A key');
-                if (this.isMoving == false)
-                {
-                    this.direction*=-1;
-                    this.isMoving = true;
-                }
-                break;
+                this.onTouchStart()
+        }
+    }
+    onTouchStart ()
+    {
+        if (this.isMoving == false)
+        {
+            this.direction*=-1;
+            this.isMoving = true;
         }
     }
 
