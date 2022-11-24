@@ -30,6 +30,9 @@ export class GameManager extends Component {
     serializePlayerStartSpeed = 3000;
     @property
     serializeMaxDistant= 150;
+    // 1/2 screen size - 1 unit size (player size)
+    // 0.5*400 - 50 = 150
+
 
     static startSpeed;
     static playerSpeed;

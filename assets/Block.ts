@@ -12,10 +12,12 @@ export class Block extends Component {
 
     public init(isSquare: boolean) {
 
+
         let horizontalPos = 0;
         if(isSquare){ // square
 
             this.node.scale = new Vec3(10,10,0) //default scale value
+            //1 unit size = 50
             horizontalPos = 50 * Math.floor(Math.random() * (GameManager.maxDistant/50 * 2 + 1) - GameManager.maxDistant/50)
         }
         else{ // bar
